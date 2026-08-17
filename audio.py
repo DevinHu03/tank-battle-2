@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from array import array
 import math
+from pathlib import Path
 
 import pygame
 
@@ -21,6 +22,7 @@ class AudioManager:
                 "explode": self._tone(90, 0.18, 0.35), "pickup": self._tone(780, 0.12, 0.25),
                 "wave": self._tone(520, 0.16, 0.25), "victory": self._tone(880, 0.22, 0.3),
                 "defeat": self._tone(120, 0.25, 0.28), "warning": self._tone(300, 0.09, 0.25),
+                "break": self._tone(240, 0.08, 0.25),
             }
             self.music = self._music_loop()
         except pygame.error:
@@ -32,7 +34,14 @@ class AudioManager:
         return pygame.mixer.Sound(buffer=samples.tobytes())
 
     def _music_loop(self) -> pygame.mixer.Sound:
-        """A restrained looping two-note pulse beneath the effects."""
+        """Load the authored arcade loop, with a procedural fallback."""
+        theme_path = Path(__file__).parent / "assets" / "music" / "steel_frontline_theme.wav"
+        if theme_path.exists():
+            return pygame.mixer.Sound(str(theme_path))
+        return self._fallback_music_loop()
+
+    def _fallback_music_loop(self) -> pygame.mixer.Sound:
+        """A restrained looping pulse for source-only installs without assets."""
         rate, seconds = 22050, 4
         notes = (110, 146.83, 98, 130.81)
         samples = array("h")

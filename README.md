@@ -1,40 +1,25 @@
-# 坦克大战 · 战术闯关
+# 钢铁防线
 
-单人、单地图的三波坦克战术小游戏。中央的不可摧毁红砖墙按 **HTY** 排列；利用掩体、击败不同敌军，并在 Boss 战中存活。
+简体中文单人坦克战役游戏。五张手工地图依次包含歼灭、守卫、生存、护送和 Boss 任务；一局完整战役约 25–35 分钟。
 
 ## 启动
 
-需要 Python 3.11+。无需激活虚拟环境时可直接运行：
+需要 Python 3.11+。
 
 ```powershell
-.\.venv\Scripts\python.exe main.py
-```
-
-首次安装依赖：
-
-```powershell
-python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe main.py
 ```
 
 ## 操作
 
-- `WASD` 或方向键：移动，移动方向同时决定炮塔方向
+- `WASD` 或方向键：移动和转向
 - `Space`：射击
-- `Enter`：开始
-- `R`：胜利或失败后从第一波重开
-- `M`：静音/恢复音效
-- `Esc`：退出
-
-## 玩法
-
-关卡为固定三波：高速轻装敌军、装甲敌军、狙击敌军会逐步混编；第三波由 14 点生命的重装齐射 Boss 收尾。敌军可能掉落以下本局强化：
-
-- 生命：回复 1 点生命，最高 3 点
-- 连发：8 秒内更快射击
-- 护盾：8 秒内免疫伤害
-
-每局会显示得分、波次、强化时间和 Boss 血条。击败 Boss 后按总分评为 S/A/B；最高分保存到项目根目录的 `save.json`。若存档或音频设备不可用，游戏仍可正常运行。
+- `Enter`：确认
+- `Esc`：暂停或返回
+- `M`：快速静音
+- `F11`：窗口/全屏切换
+- '技能选择按数字键’
 
 ## 测试
 
@@ -44,4 +29,15 @@ $env:SDL_AUDIODRIVER='dummy'
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-玩家、侦察、装甲、狙击与 Boss 坦克均使用 AI 生成的透明俯视精灵；HTY 砖墙、HUD 和粒子由代码绘制。音频包含合成的循环背景音乐与战斗效果音。
+规则层不依赖显示器或音频设备，覆盖地形、战役任务、Boss 阶段、升级与版本化存档。存档默认写入项目旁的 `save.json`；发行版首次启动时自动创建它。
+
+## Windows 打包
+
+```powershell
+.\.venv\Scripts\python.exe -m PyInstaller --noconfirm build\SteelFrontline.spec
+Compress-Archive -Path release\SteelFrontline\* -DestinationPath release\SteelFrontline-Windows.zip -Force
+```
+
+生成的 `release\SteelFrontline\SteelFrontline.exe` 不需要目标电脑安装 Python。请勿将个人 `save.json` 放入发行 ZIP。
+
+素材与声音使用项目内原创资源：复古街机菜单、地形/道具图集和 `assets\music\steel_frontline_theme.wav`。第 4 关现为“废墟突袭”歼灭任务，不再使用有路线卡死风险的护送载具流程。
